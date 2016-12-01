@@ -9,9 +9,13 @@ let x = 0, y = 0;
 let currentDirectionAngle = 0;
 let visitedLocations = [];
 
-movements.forEach(turnAndMove);
+for (var i = 0; i < movements.length; i++) {
+    if (turnAndMove(movements[i])) {
+        break;
+    }
+}
 
-console.log(Math.abs(x) + Math.abs(y));
+// console.log(Math.abs(x) + Math.abs(y));
 
 function turnAndMove(movement) {
     let direction = movement[0];
@@ -26,7 +30,18 @@ function turnAndMove(movement) {
     }
     currentDirectionAngle = (currentDirectionAngle + difference + 360) % 360;
 
-    x += Math.round(Math.sin(currentDirectionAngle * (Math.PI / 180))) * steps;
-    y += Math.round(Math.cos(currentDirectionAngle * (Math.PI / 180))) * steps;
+    for (var i = 0; i < steps; i++) {
+        x += Math.round(Math.sin(currentDirectionAngle * (Math.PI / 180)));
+        y += Math.round(Math.cos(currentDirectionAngle * (Math.PI / 180)));
+        if (visitedLocations.some(coords => coords.x == x && coords.y == y)) {
+            console.log(Math.abs(x) + Math.abs(y));
+            return true;
+        }
+        else {
+            visitedLocations.push({x, y});
+        }
+    }
+
+    return false;
 }
 
