@@ -4,11 +4,6 @@ URURLLDRDLULULRDRRDDUUUDDRDUURULLULDRLUDLRUDDDLDRRLURLURUUDRLDUULDRDURRLLUDLDURR
 DRRDRRRLDDLDUDRDLRUUDRDUDRRDUDRDURRDDRLLURUUDRLRDDULLUULRUUDDRLDLRULDLRLDUDULUULLLRDLURDRDURURDUDUDDDRRLRRLLRULLLLRDRDLRRDDDLULDLLUUULRDURRULDDUDDDURRDRDRDRULRRRDRUDLLDDDRULRRLUDRDLDLDDDLRLRLRLDULRLLRLRDUUULLRRDLLRDULURRLDUDDULDDRLUDLULLRLDUDLULRDURLRULLRRDRDDLUULUUUULDRLLDRDLUDURRLLDURLLDDLLUULLDURULULDLUUDLRURRRULUDRLDRDURLDUDDULRDRRDDRLRRDDRUDRURULDRRLUURUDULDDDLRRRRDRRRLLURUURLRLULUULLRLRDLRRLLUULLDURDLULURDLRUUDUUURURUURDDRLULUUULRDRDRUUDDDRDRL
 RLRUDDUUDDDDRRLRUUDLLDRUUUDRRDLDRLRLLDRLUDDURDLDUDRRUURULLRRLUULLUDRDRUDDULRLLUDLULRLRRUUDLDLRDDDRDDDUDLULDLRRLUDUDDRRRRDRDRUUDDURLRDLLDLDLRRDURULDRLRRURULRDDLLLRULLRUUUDLDUURDUUDDRRRDDRLDDRULRRRDRRLUDDDRUURRDRRDURDRUDRRDLUDDURRLUDUDLLRUURLRLLLDDURUDLDRLRLLDLLULLDRULUURLDDULDDRDDDURULLDRDDLURRDDRRRLDLRLRRLLDLLLRDUDDULRLUDDUULUDLDDDULULDLRDDLDLLLDUUDLRRLRDRRUUUURLDLRRLDULURLDRDURDDRURLDLDULURRRLRUDLDURDLLUDULDDU"""
 
-# input = """ULL
-# RRDDD
-# LURDL
-# UUUUD"""
-
 lines = input.split("\n")
 
 def navigate(startAt, instructionLine):
@@ -18,18 +13,23 @@ def navigate(startAt, instructionLine):
     return currentPos
 
 def moveToNext(currentDigit, direction):
-    if direction == "U" and currentDigit > 3:
-        return currentDigit - 3
-    elif direction == "D" and currentDigit < 7:
-        return currentDigit + 3
-    elif direction == "R" and currentDigit % 3 > 0:
-        return currentDigit + 1
-    elif direction == "L" and (currentDigit - 1) % 3 > 0:
-        return currentDigit - 1
+    keypad = "  1   234 56789 ABC   D "
+    keypadWidth = 5
+    keypadHeight = 5
+    currentIndex = keypad.index(currentDigit)
+    if direction == "U" and currentIndex > (keypadWidth - 1):
+        result = keypad[currentIndex - keypadWidth]
+    elif direction == "D" and currentIndex < (keypadWidth * (keypadHeight - 1)):
+        result = keypad[currentIndex + keypadWidth]
+    elif direction == "R" and (currentIndex + 1) % keypadWidth > 0:
+        result = keypad[currentIndex + 1]
+    elif direction == "L" and currentIndex % keypadWidth > 0:
+        result = keypad[currentIndex - 1]
     else:
-        return currentDigit
+        result = currentDigit
+    return result if result != " " else currentDigit
 
-currentPos = 5
+currentPos = "5"
 for line in lines:
     currentPos = navigate(currentPos, line)
     print(currentPos)
