@@ -12,24 +12,29 @@ class PasswordCracker
         @counter = 0
     end
 
-    def nextCharacter
+    def is_valid_position(character, current_result)
+        (!! /[0-7]/.match(character)) and current_result[character.to_i] == nil
+    end
+
+    def next_interesting_hash(current_result)
         result = ''
-        until (result[0..4] == '00000') do
+        until (result[0..4] == '00000' and is_valid_position(result[5], current_result)) do
             result = hash(@input + @counter.to_s)
             @counter = @counter + 1
         end
-        result[5]
+        return result
     end
 
-    def getPassword
-        result = ''
-        for i in 1..8
-            result += nextCharacter
+    def get_password
+        result = []
+        until result.size == 8 and not result.include? nil
+            nextHash = next_interesting_hash(result)
+            result[nextHash[5].to_i] = nextHash[6]
         end
-        result
+        return result.join
     end
 end
 
 
 
-puts PasswordCracker.new(doorId).getPassword
+puts PasswordCracker.new(doorId).get_password
